@@ -6,7 +6,7 @@ jobs:
         name: Tests
         runs-on: codebuild-stellaraf-actions-public-${{ github.run_id }}-${{ github.run_attempt }}
         env:
-          GOPATH: ${{ runner.temp }}/go
+          GOPATH: /tmp/stellar-go
         steps:
             - uses: actions/checkout@v3
             - uses: actions/setup-go@v4
