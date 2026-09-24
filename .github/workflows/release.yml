@@ -12,12 +12,12 @@ jobs:
           GOPATH: /tmp/stellar-go
         steps:
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
               with:
                   fetch-depth: 0
 
             - name: Set up Go
-              uses: actions/setup-go@v4
+              uses: actions/setup-go@v5
               with:
                   go-version: 1.21.x
 
@@ -29,7 +29,7 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Upload assets
-              uses: actions/upload-artifact@v3
-              with:
-                  path: dist/*
+            - name: Store build artifacts in S3 (30 days)
+              env:
+                ARTIFACT_DESTINATION: s3://stellaraf-public-ci-961341522852-us-west-1/actions/${{ github.repository }}/${{ github.run_id }}/${{ github.run_attempt }}/${{ github.sha }}/dist/
+              run: aws s3 cp dist/ "$ARTIFACT_DESTINATION" --recursive --only-show-errors
